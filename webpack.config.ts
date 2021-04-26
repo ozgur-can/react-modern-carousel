@@ -8,7 +8,7 @@ interface Config extends WebpackConfig {
 }
 
 const config: Config = {
-  entry: "/src/index.ts",
+  entry: "/src",
   devtool: "inline-source-map",
   module: {
     rules: [
@@ -21,12 +21,14 @@ const config: Config = {
       {
         test: /\.(s[ac]ss|css)$/i,
         use: ["style-loader", "css-loader", "sass-loader"],
-        include: path.resolve(__dirname, "src"),
+        include: path.resolve(__dirname, "src/style"),
         exclude: /node_modules/,
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         use: ["url-loader?limit=10000", "img-loader"],
+        include: path.resolve(__dirname, "src/images"),
+        exclude: /node_modules/,
       },
     ],
   },
