@@ -1,6 +1,5 @@
-import { realpathSync } from 'node:fs';
-import React, { createContext, useEffect, useReducer } from 'react'
-import { navigateToLeft, IActionType, navigateToRight, IState, reducer, state, NavigDirection } from '../context';
+import React, { createContext, useReducer } from 'react'
+import { IActionType, IState, reducer, state, NavigDirection } from '../context';
 import NavigButton from './NavigButton';
 
 export interface CarouselProps {
@@ -18,8 +17,6 @@ const Carousel: React.FC<CarouselProps> = (props) => {
             <NavigButton direction={NavigDirection.Left}/>
             {child ? React.cloneElement(child) : null}
             <NavigButton direction={NavigDirection.Right}/>
-            {/* <button onClick={() => dispatch(navigateToLeft())}>left</button> */}
-            {/* <button onClick={() => dispatch(navigateToRight())}>right</button> */}
         </AppCtx.Provider>
     )
 }
