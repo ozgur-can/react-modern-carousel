@@ -6,7 +6,7 @@
       "module": "CommonJS",
       "target": "es5",
       "jsx": "react",
-      "allowJs": false,
+      "allowJs": true,
       "allowSyntheticDefaultImports": true,
       "moduleResolution": "Node",
       "esModuleInterop": true
