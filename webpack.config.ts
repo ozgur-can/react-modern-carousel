@@ -2,6 +2,7 @@ import path from "path";
 import webpack from "webpack";
 import { Configuration as WebpackConfig } from "webpack";
 import { Configuration as WebpackDevConfig } from "webpack-dev-server";
+import TerserPlugin from 'terser-webpack-plugin';
 
 interface Config extends WebpackConfig {
   devServer?: WebpackDevConfig;
@@ -50,6 +51,9 @@ const config: Config = {
     // hotOnly: false,
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
+  optimization: {
+    minimizer: [new TerserPlugin()],
+  },
 };
 
 export default config;
