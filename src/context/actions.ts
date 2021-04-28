@@ -7,3 +7,8 @@ export const navigateToLeft = (): IActionType => ({
 export const navigateToRight = (): IActionType => ({
   type: "RIGHT",
 });
+
+export const setItems = (items: (React.ReactChild | React.ReactFragment | React.ReactPortal)[]): IActionType => ({
+  type: "SET_ITEMS",
+  items: items
+})

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { navigateToLeft, navigateToRight, NavigDirection } from "../context";
 import { AppCtx } from "./Carousel";
 
@@ -8,12 +8,12 @@ export interface NavigButtonProps {
 
 const NavigButton: React.FC<NavigButtonProps> = ({ direction }) => {
     const context = useContext(AppCtx);
-    
-    if(direction === NavigDirection.Left)
-    return <button onClick={() => context.dispatch(navigateToLeft())}>LEFT</button>
-    
-    if(direction === NavigDirection.Right)
-    return <button onClick={() => context.dispatch(navigateToRight())}>RIGHT</button>
+
+    if (direction === NavigDirection.Left)
+        return <button onClick={() => context.dispatch(navigateToLeft())}>LEFT</button>
+
+    if (direction === NavigDirection.Right)
+        return <button onClick={() => context.dispatch(navigateToRight())}>RIGHT</button>
 }
 
 export default NavigButton;
