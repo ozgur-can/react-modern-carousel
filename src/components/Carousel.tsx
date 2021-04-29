@@ -12,7 +12,7 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
 
     useEffect(() => {
-        if (!wrapper) dispatch(setItems(React.Children.toArray(children!)));
+        if (!wrapper) dispatch(setItems(React.Children.toArray(children!), infinite));
         return () => {
             // clean up
         }

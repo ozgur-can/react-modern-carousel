@@ -1,9 +1,9 @@
 class LinkedList {
-  constructor() {
+  constructor(circular) {
     this.head = null; // one head
     this.tail = null;
     this.length = 0;
-    this.circular = true;
+    this.circular = circular;
   }
 
   addtoLast(imgSrc) {

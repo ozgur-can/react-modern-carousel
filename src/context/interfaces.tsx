@@ -10,6 +10,7 @@ export interface IState {
 export interface IActionType{
     type: string;
     items?: (React.ReactChild | React.ReactFragment | React.ReactPortal)[];
+    infinite?: boolean;
 }
 
 export enum NavigDirection {

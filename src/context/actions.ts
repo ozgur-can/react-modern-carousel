@@ -8,7 +8,8 @@ export const navigateToRight = (): IActionType => ({
   type: "RIGHT",
 });
 
-export const setItems = (items: (React.ReactChild | React.ReactFragment | React.ReactPortal)[]): IActionType => ({
+export const setItems = (items: (React.ReactChild | React.ReactFragment | React.ReactPortal)[], infinite: boolean): IActionType => ({
   type: "SET_ITEMS",
-  items: items
+  items,
+  infinite
 })

@@ -1,8 +1,6 @@
 import { IActionType, IState } from "./interfaces";
 import { LinkedList } from "../helper/LinkedList";
 
-const linkedList = new LinkedList();
-
 export const reducer = (state: IState, action: IActionType): IState => {
   switch (action.type) {
     case "LEFT":
@@ -16,6 +14,7 @@ export const reducer = (state: IState, action: IActionType): IState => {
       else return { ...state };
 
     case "SET_ITEMS": {
+      const linkedList = new LinkedList(action.infinite);
       linkedList.setItems(action.items);
       return {
         ...state,
