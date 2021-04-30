@@ -44,6 +44,7 @@ class LinkedList {
       this.addtoLast(arr[i].props.src);
 
       if (this.circular && i == arr.length - 1) {
+        this.head.prev = this.getLast();
         this.getLast().next = this.head;
       }
     }
