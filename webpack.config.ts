@@ -42,6 +42,7 @@ const config: Config = {
     clean: true,
   },
   devServer: {
+    host: "0.0.0.0",
     open: false,
     contentBase: path.join(__dirname, "public"),
     port: 3002,
