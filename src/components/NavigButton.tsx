@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { navigateToLeft, navigateToRight, NavigDirection } from "../context";
+import { moveWithAnimation, navigateToLeft, navigateToRight, NavigDirection } from "../context";
 import { AppCtx } from "./Carousel";
 
 export interface NavigButtonProps {
@@ -10,10 +10,16 @@ const NavigButton: React.FC<NavigButtonProps> = ({ direction }) => {
     const context = useContext(AppCtx);
 
     if (direction === NavigDirection.Left)
-        return <button onClick={() => context.dispatch(navigateToLeft())}>LEFT</button>
+        return <button
+            onClick={() => context.dispatch(navigateToLeft())}
+            onMouseDown={() => context.dispatch(moveWithAnimation("<"))}
+            onMouseUp={() => context.dispatch(moveWithAnimation(">"))}>LEFT</button>
 
     if (direction === NavigDirection.Right)
-        return <button onClick={() => context.dispatch(navigateToRight())}>RIGHT</button>
+        return <button
+            onClick={() => context.dispatch(navigateToRight())}
+            onMouseDown={() => context.dispatch(moveWithAnimation("<"))}
+            onMouseUp={() => context.dispatch(moveWithAnimation(">"))}>RIGHT</button>
 }
 
 export default NavigButton;
