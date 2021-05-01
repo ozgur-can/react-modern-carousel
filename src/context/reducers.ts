@@ -27,6 +27,19 @@ export const reducer = (state: IState, action: IActionType): IState => {
       };
     }
 
+    case "SET_POINTER_CHANGES": {
+      if (action.pointerValues.pointDownPosX)
+        return { ...state, pointerValues: action.pointerValues };
+      if (!action.pointerValues.pointDownPosX)
+        return {
+          ...state,
+          pointerValues: {
+            ...state.pointerValues,
+            pointDown: action.pointerValues.pointDown,
+          },
+        };
+    }
+
     default:
       return state;
   }

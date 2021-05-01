@@ -7,7 +7,7 @@ import Image3 from "./images/img_3.png";
 const App: React.FC = () => {
     return (
         <Carousel
-            infinite={false}
+            infinite={true}
             wrapper={false}
         >
             <img src={Image1} alt="1" />
