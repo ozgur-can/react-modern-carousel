@@ -35,13 +35,13 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
         }
     }, [children]);
 
-    const onPointerDownHandler = (t: React.PointerEvent<any>) => {
+    const onPointerDownHandler = (t: React.PointerEvent<HTMLElement>) => {
         // set default css, set pointer changes to the store
         itemRef.current.style.transition = "none";
         dispatch(setPointerChanges({ pointerDown: true, pointerDownPosX: t.clientX }));
     }
 
-    const onPointerUpHandler = (t: React.PointerEvent<any>) => {
+    const onPointerUpHandler = (t: React.PointerEvent<HTMLElement>) => {
         // detect move direction
         if (mainState.pointerValues.pointerDownPosX < t.clientX) dirX = NavigDirection.Right;
         else if (mainState.pointerValues.pointerDownPosX > t.clientX) dirX = NavigDirection.Right;
@@ -60,7 +60,7 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
         setCssAnimation();
     }
 
-    const onPointerOutHandler = (t: React.PointerEvent<any>) => {
+    const onPointerOutHandler = (t: React.PointerEvent<HTMLElement>) => {
         // detect move direction
         if (mainState.pointerValues.pointerDownPosX < t.clientX) dirX = NavigDirection.Right;
         else if (mainState.pointerValues.pointerDownPosX > t.clientX) dirX = NavigDirection.Left;
@@ -81,7 +81,7 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
         setCssAnimation();
     }
 
-    const onPointerMoveHandler = (t: React.PointerEvent<any>) => {
+    const onPointerMoveHandler = (t: React.PointerEvent<HTMLElement>) => {
         // get pointer position
         objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
 
@@ -90,13 +90,13 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
             itemRef.current.style.objectPosition = `${objectPosX + 2 * t.movementX}px`;
     }
 
-    const onTouchStartHandler = (t: React.TouchEvent<any>) => {
+    const onTouchStartHandler = (t: React.TouchEvent<HTMLElement>) => {
         // set default css, set touch changes to the store
         itemRef.current.style.transition = "none";
         dispatch(setTouchChanges({ touchDown: true, touchDownPosX: t.touches[0].clientX }));
     }
 
-    const onTouchEndHandler = (t: React.TouchEvent<any>) => {   
+    const onTouchEndHandler = (t: React.TouchEvent<HTMLElement>) => {   
         // detect move direction
         if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX < 0) dirX = NavigDirection.Left;
         else if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX > 0) dirX = NavigDirection.Right;
@@ -117,7 +117,7 @@ const Carousel: React.FC<CarouselProps> = ({ wrapper, infinite, children }) => {
         setCssAnimation();
     }
 
-    const onTouchMoveHandler = (t: React.TouchEvent<any>) => {
+    const onTouchMoveHandler = (t: React.TouchEvent<HTMLElement>) => {
         // get touch position
         objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
 
