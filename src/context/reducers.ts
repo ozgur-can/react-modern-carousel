@@ -28,14 +28,27 @@ export const reducer = (state: IState, action: IActionType): IState => {
     }
 
     case "SET_POINTER_CHANGES": {
-      if (action.pointerValues.pointDownPosX)
+      if (action.pointerValues.pointerDownPosX)
         return { ...state, pointerValues: action.pointerValues };
-      if (!action.pointerValues.pointDownPosX)
+      if (!action.pointerValues.pointerDownPosX)
         return {
           ...state,
           pointerValues: {
             ...state.pointerValues,
-            pointDown: action.pointerValues.pointDown,
+            pointerDown: action.pointerValues.pointerDown,
+          },
+        };
+    }
+
+    case "SET_TOUCH_CHANGES": {
+      if (action.touchValues.touchDownPosX)
+        return { ...state, touchValues: action.touchValues };
+      if (!action.touchValues.touchDownPosX)
+        return {
+          ...state,
+          touchValues: {
+            ...state.touchValues,
+            touchDown: action.touchValues.touchDown,
           },
         };
     }

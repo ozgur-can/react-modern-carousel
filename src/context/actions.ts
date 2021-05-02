@@ -1,4 +1,4 @@
-import { IActionType, IPointerValues } from "./interfaces";
+import { IActionType, IPointerValues, ITouchValues } from "./interfaces";
 
 export const navigateToLeft = (): IActionType => ({
   type: "LEFT",
@@ -22,4 +22,9 @@ export const setItems = (items: (React.ReactChild | React.ReactFragment | React.
 export const setPointerChanges = (pointerValues: IPointerValues): IActionType => ({
   type: "SET_POINTER_CHANGES",
   pointerValues
+});
+
+export const setTouchChanges = (touchValues: ITouchValues): IActionType => ({
+  type: "SET_TOUCH_CHANGES",
+  touchValues
 });
