@@ -6,11 +6,11 @@ class LinkedList {
     this.circular = circular;
   }
 
-  addtoLast(imgSrc) {
+  addtoLast(nodeContent) {
     if (!this.head) {
       ++this.length;
       this.head = {
-        imgSrc: imgSrc,
+        nodeContent: nodeContent,
         prev: null,
         next: null,
         length: this.length,
@@ -19,7 +19,7 @@ class LinkedList {
       this.length++;
       let now = this.head;
       let newNode = {
-        imgSrc: imgSrc,
+        nodeContent: nodeContent,
         prev: null,
         next: null,
         length: this.length,
@@ -41,7 +41,7 @@ class LinkedList {
 
   setItems(arr) {
     for (let i = 0; i < arr.length; i++) {
-      this.addtoLast(arr[i].props.src);
+      this.addtoLast(arr[i]);
 
       if (this.circular && i == arr.length - 1) {
         this.head.prev = this.getLast();

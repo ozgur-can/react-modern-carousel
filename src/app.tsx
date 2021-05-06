@@ -6,13 +6,11 @@ import Image3 from "./images/img_3.png";
 
 const App: React.FC = () => {
     return (
-        <Carousel
-            infinite={true}
-            wrapper={false}
-        >
-            <img src={Image1} alt="1" />
-            <img src={Image2} alt="2" />
-            <img src={Image3} alt="3" />
+        <Carousel infinite={true}>
+            <img className="noSelect" draggable={false} src={Image1} alt="1" />
+            <img className="noSelect" draggable={false} src={Image2} alt="2" />
+            <img className="noSelect" draggable={false} src={Image3} alt="3" />
+            <div>item</div>
         </Carousel >
     )
 }
