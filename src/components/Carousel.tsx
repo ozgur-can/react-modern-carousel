@@ -30,6 +30,10 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         itemRef.current.style.transition = "all 400ms ease-out";
     }
 
+    const getObjectPosX = (): number => {
+        return parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+    }
+
     useEffect(() => {
         dispatch(setItems(React.Children.toArray(children!), infinite));
 
@@ -53,7 +57,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         dispatch(setPointerChanges({ pointerDown: false }));
 
         // get pointer position
-        objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+        objectPosX = getObjectPosX();
 
         // success - next - pointer up
         if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
@@ -72,7 +76,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         dispatch(setPointerChanges({ pointerDown: false }));
 
         // get pointer position
-        objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+        objectPosX = getObjectPosX();
 
         // success - next - pointer up
         if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
@@ -86,7 +90,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
 
     const onPointerMoveHandler = (t: PointerEvent) => {
         // get pointer position
-        objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+        objectPosX = getObjectPosX();
 
         // set new values to css object-position
         if (mainState.pointerValues && mainState.pointerValues.pointerDown) {
@@ -109,7 +113,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         dispatch(setTouchChanges({ touchDown: false }));
 
         // get touch position
-        objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+        objectPosX = getObjectPosX();
 
         // success - next - mouse up
         if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
@@ -123,7 +127,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
 
     const onTouchMoveHandler = (t: TouchEvent) => {
         // get touch position
-        objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
+        objectPosX = getObjectPosX();
 
         // get touch move value
         movementX = t.touches[0].clientX - mainState.touchValues.touchDownPosX;
