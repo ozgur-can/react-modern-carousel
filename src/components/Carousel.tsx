@@ -15,7 +15,7 @@ export const AppCtx = createContext<{ state: IState, dispatch: React.Dispatch<IA
 const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
     const itemRef = useRef<ElementType>(null);
-    let dirX: NavigDirection = null;
+    let directionX: NavigDirection = null;
     let movementX: number = null;
     let objectPosX: number = null;
     const isMobile: boolean = navigator.userAgent.indexOf("Mobi") > -1;
@@ -46,8 +46,8 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
 
     const onPointerUpHandler = (t: PointerEvent) => {
         // detect move direction
-        if (mainState.pointerValues.pointerDownPosX < t.clientX) dirX = NavigDirection.Right;
-        else if (mainState.pointerValues.pointerDownPosX > t.clientX) dirX = NavigDirection.Right;
+        if (mainState.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
+        else if (mainState.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Right;
 
         // set pointer changes to the store
         dispatch(setPointerChanges({ pointerDown: false }));
@@ -56,17 +56,17 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
 
         // success - next - pointer up
-        if (dirX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
+        if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
         // success - prev - pointer up
-        else if (dirX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
+        else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
 
         setCssAnimation();
     }
 
     const onPointerOutHandler = (t: PointerEvent) => {
         // detect move direction
-        if (mainState.pointerValues.pointerDownPosX < t.clientX) dirX = NavigDirection.Right;
-        else if (mainState.pointerValues.pointerDownPosX > t.clientX) dirX = NavigDirection.Left;
+        if (mainState.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
+        else if (mainState.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Left;
 
         // set pointer changes to the store
         dispatch(setPointerChanges({ pointerDown: false }));
@@ -75,10 +75,10 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
 
         // success - next - pointer up
-        if (dirX === NavigDirection.Right && objectPosX > itemRef.current.width)
+        if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
             dispatch(navigateToRight());
         // success - prev - pointer up
-        else if (dirX === NavigDirection.Left && objectPosX < -itemRef.current.width)
+        else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width)
             dispatch(navigateToLeft());
 
         setCssAnimation();
@@ -102,8 +102,8 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
 
     const onTouchEndHandler = (t: TouchEvent) => {
         // detect move direction
-        if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX < 0) dirX = NavigDirection.Left;
-        else if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX > 0) dirX = NavigDirection.Right;
+        if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX < 0) directionX = NavigDirection.Left;
+        else if (t.changedTouches[0].clientX - mainState.touchValues.touchDownPosX > 0) directionX = NavigDirection.Right;
 
         // set touch changes to the store
         dispatch(setTouchChanges({ touchDown: false }));
@@ -112,10 +112,10 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         objectPosX = parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0]);
 
         // success - next - mouse up
-        if (dirX === NavigDirection.Right && objectPosX > itemRef.current.width)
+        if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
             dispatch(navigateToRight());
         // success - prev - mouse up
-        else if (dirX === NavigDirection.Left && objectPosX < -itemRef.current.width)
+        else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width)
             dispatch(navigateToLeft());
 
         setCssAnimation();
