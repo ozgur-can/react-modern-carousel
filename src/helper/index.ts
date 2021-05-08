@@ -20,4 +20,5 @@ export const initialCSS: React.CSSProperties = {
     position: "relative",
     objectFit: "none",
     objectPosition: "0px",
+    userSelect: "none"
 };
