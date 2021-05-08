@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useContext } from 'react'
 import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { CanvasProps, ImgProps, isMobile, setCssAnimation } from '../helper';
+import { CanvasProps, getObjectPosX, ImgProps, isMobile, setCssAnimation } from '../helper';
 import { AppCtx } from './Carousel';
 
 export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLCanvasElement, ImgProps | CanvasProps>(({ children, style }, ref) => {
@@ -10,7 +10,18 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
   let movementX: number = null;
   let objectPosX: number = null;
 
-  const getObjectPosX = (): number => parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0])
+  const animatedItemNodeProps = {
+    ref: (node: HTMLCanvasElement) => setRef(node),
+    draggable: false,
+    style,
+    onPointerDown: (t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null,
+    onPointerUp: (t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null,
+    onPointerMove: (t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null,
+    onPointerOut: (t: PointerEvent) => !isMobile ? onPointerOutHandler(t) : null,
+    onTouchStart: (t: TouchEvent) => isMobile ? onTouchStartHandler(t) : null,
+    onTouchEnd: (t: TouchEvent) => isMobile ? onTouchEndHandler(t) : null,
+    onTouchMove: (t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null
+  }
 
   const onPointerDownHandler = (t: PointerEvent) => {
     // set default css, set pointer changes to the store
@@ -36,7 +47,7 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     dispatch(setPointerChanges({ pointerDown: false }));
 
     // get pointer position
-    objectPosX = getObjectPosX();
+    objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
     if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
@@ -55,7 +66,7 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     dispatch(setPointerChanges({ pointerDown: false }));
 
     // get pointer position
-    objectPosX = getObjectPosX();
+    objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
     if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
@@ -70,7 +81,7 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
 
   const onPointerMoveHandler = (t: PointerEvent) => {
     // get pointer position
-    objectPosX = getObjectPosX();
+    objectPosX = getObjectPosX(itemRef);
 
     // set new values to css object-position
     if (state.pointerValues && state.pointerValues.pointerDown) {
@@ -93,7 +104,7 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     dispatch(setTouchChanges({ touchDown: false }));
 
     // get touch position
-    objectPosX = getObjectPosX();
+    objectPosX = getObjectPosX(itemRef);
 
     // success - next - mouse up
     if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
@@ -107,7 +118,7 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
 
   const onTouchMoveHandler = (t: TouchEvent) => {
     // get touch position
-    objectPosX = getObjectPosX();
+    objectPosX = getObjectPosX(itemRef);
 
     // get touch move value
     movementX = t.touches[0].clientX - state.touchValues.touchDownPosX;
@@ -117,37 +128,11 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
       itemRef.current.style.objectPosition = `${objectPosX + movementX / 5}px`;
   }
 
-
   if (children && (children as any).type === "img") {
-    return <img src={(children as any).props} alt=""
-      {...(children as any).props}
-      ref={(node) => setRef(node)}
-      draggable={false}
-      style={style}
-      onPointerDown={(t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null}
-      onPointerUp={(t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null}
-      onPointerMove={(t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null}
-      onPointerOut={(t: PointerEvent) => !isMobile ? onPointerOutHandler(t) : null}
-      onTouchStart={(t: TouchEvent) => isMobile ? onTouchStartHandler(t) : null}
-      onTouchEnd={(t: TouchEvent) => isMobile ? onTouchEndHandler(t) : null}
-      onTouchMove={(t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null} />
+    return <img src={(children as any).props} {...animatedItemNodeProps} alt="" {...(children as any).props} />
   }
   else if (children && (children as any).type !== "img") {
-    return <canvas
-      {...(children as any).props}
-      ref={(node) => setRef(node)}
-      draggable={false}
-      style={style}
-      onPointerDown={(t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null}
-      onPointerUp={(t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null}
-      onPointerMove={(t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null}
-      onPointerOut={(t: PointerEvent) => !isMobile ? onPointerOutHandler(t) : null}
-      onTouchStart={(t: TouchEvent) => isMobile ? onTouchStartHandler(t) : null}
-      onTouchEnd={(t: TouchEvent) => isMobile ? onTouchEndHandler(t) : null}
-      onTouchMove={(t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null}
-    >
-      {children}
-    </canvas>
+    return <canvas {...(children as any).props} {...animatedItemNodeProps}>{children}</canvas>
   }
   else return null;
 }))

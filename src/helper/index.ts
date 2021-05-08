@@ -9,6 +9,8 @@ export const setCssAnimation = (
   itemRef.current.style.transition = "all 400ms ease-out";
 };
 
+export const getObjectPosX = (itemRef: React.MutableRefObject<HTMLImageElement | HTMLCanvasElement>): number => parseFloat(itemRef.current.style.objectPosition.split(" ")[0].split("px")[0])
+
 // animated prop types
 export type ImgProps = React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>;
 export type CanvasProps = React.DetailedHTMLProps<React.CanvasHTMLAttributes<HTMLCanvasElement>, HTMLCanvasElement>;
