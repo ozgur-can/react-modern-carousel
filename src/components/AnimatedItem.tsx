@@ -129,10 +129,10 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
   }
 
   if (children && (children as any).type === "img") {
-    return <img src={(children as any).props} {...animatedItemNodeProps} alt="" {...(children as any).props} />
+    return <img width="300" height="300" src={(children as any).props} {...animatedItemNodeProps} alt="" {...(children as any).props} />
   }
   else if (children && (children as any).type !== "img") {
-    return <canvas {...(children as any).props} {...animatedItemNodeProps}>{children}</canvas>
+    return <canvas width="300" height="300" {...(children as any).props} {...animatedItemNodeProps}>{children}</canvas>
   }
   else return null;
 }))

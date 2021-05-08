@@ -24,9 +24,29 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         let ctx: CanvasRenderingContext2D;
         if (node && node.nodeName === "CANVAS") {
             ctx = node.getContext("2d");
-            ctx.clearRect(0, 0, 300, 150);
-            ctx.font = "30px Arial";
-            ctx.fillText(node.textContent, 10, 30);
+            ctx.clearRect(0, 0, node.width, node.height);
+            ctx.font = "bold 17px Garamond";
+            const maxWidth = 180;
+            const lineHeight = 25;
+            const x = (node.width - maxWidth) / 2;
+            let y = 30;
+
+            // text wrapping for canvas
+            let words = node.textContent.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                let testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                }
+                else line = testLine;
+            }
+
+            ctx.fillText(line, x, y);
         }
     }), [mainState.itemToShow]);
 
