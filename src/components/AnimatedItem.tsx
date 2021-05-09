@@ -1,19 +1,19 @@
-import React, { MutableRefObject, useContext } from 'react'
+import React, { useCallback, useContext, memo, useRef } from 'react'
 import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { CanvasProps, getObjectPosX, ImgProps, isMobile, setCssAnimation } from '../helper';
+import { CanvasProps, getObjectPosX, initialCSS, isMobile, nonTextElementTypes, setCssAnimation, textElementTypes } from '../helper';
 import { AppCtx } from './Carousel';
 
-export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLCanvasElement, ImgProps | CanvasProps>(({ children, style }, ref) => {
+export const AnimatedItem = memo<CanvasProps>(({ children }) => {
   const { state, dispatch } = useContext(AppCtx);
-  let itemRef = React.useRef<HTMLImageElement | HTMLCanvasElement>(null);
+  const itemRef = useRef<HTMLCanvasElement>(null);
   let directionX: NavigDirection = null;
   let movementX: number = null;
   let objectPosX: number = null;
 
   const animatedItemNodeProps = {
-    ref: (node: HTMLCanvasElement) => setRef(node),
+    style: initialCSS,
     draggable: false,
-    style,
+    ref: (node: HTMLCanvasElement) => onRefChanged(node),
     onPointerDown: (t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null,
     onPointerUp: (t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null,
     onPointerMove: (t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null,
@@ -23,25 +23,64 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     onTouchMove: (t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null
   }
 
+  // detects ref changes and draw canvas for elements
+  const onRefChanged = useCallback((node: HTMLCanvasElement) => {
+    itemRef.current = node;
+
+    let ctx: CanvasRenderingContext2D;
+    if (node) {
+      ctx = node.getContext("2d");
+      ctx.clearRect(0, 0, node.width, node.height);
+      drawCtx((children as any).type, ctx, node);
+    }
+
+  }, [state.itemToShow]);
+
+  const drawCtx = (elementType: string, ctx: CanvasRenderingContext2D, node: HTMLCanvasElement) => {
+
+    if (textElementTypes.indexOf(elementType) === -1) {
+      let img = new Image();
+      img.src = state.itemToShow ? state.itemToShow.nodeContent.props.src : "";
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+      }
+    }
+    else if (nonTextElementTypes.indexOf(elementType) === -1) {
+      ctx.font = "bold 17px Garamond";
+      const maxWidth = 180;
+      const lineHeight = 25;
+      const x = (node.width - maxWidth) / 2;
+      let y = 30;
+
+      // text wrapping for canvas
+      let words = node.textContent.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        let testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        }
+        else line = testLine;
+      }
+
+      ctx.fillText(line, x, y);
+    }
+  }
+
   const onPointerDownHandler = (t: PointerEvent) => {
     // set default css, set pointer changes to the store
     itemRef.current.style.transition = "none";
     dispatch(setPointerChanges({ pointerDown: true, pointerDownPosX: t.clientX }));
   }
 
-  const setRef = (node: HTMLImageElement | HTMLCanvasElement) => {
-    itemRef.current = node;
-    if (typeof ref === 'function') {
-      ref(node);
-    } else if (ref) {
-      (ref as MutableRefObject<HTMLImageElement | HTMLCanvasElement>).current = node;
-    }
-  }
-
   const onPointerUpHandler = (t: PointerEvent) => {
     // detect move direction
-    if (state.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
-    else if (state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Right;
+    if (state.pointerValues && state.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
+    else if (state.pointerValues && state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Right;
 
     // set pointer changes to the store
     dispatch(setPointerChanges({ pointerDown: false }));
@@ -59,8 +98,8 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
 
   const onPointerOutHandler = (t: PointerEvent) => {
     // detect move direction
-    if (state.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
-    else if (state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Left;
+    if (state.pointerValues && state.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
+    else if (state.pointerValues && state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Left;
 
     // set pointer changes to the store
     dispatch(setPointerChanges({ pointerDown: false }));
@@ -78,13 +117,12 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     setCssAnimation(itemRef);
   }
 
-
   const onPointerMoveHandler = (t: PointerEvent) => {
     // get pointer position
     objectPosX = getObjectPosX(itemRef);
 
     // set new values to css object-position
-    if (state.pointerValues && state.pointerValues.pointerDown) {
+    if (state.pointerValues && state.pointerValues && state.pointerValues.pointerDown) {
       itemRef.current.style.objectPosition = `${objectPosX + 2 * t.movementX}px`;
     }
   }
@@ -123,16 +161,12 @@ export const AnimatedItem = React.memo(React.forwardRef<HTMLImageElement | HTMLC
     // get touch move value
     movementX = t.touches[0].clientX - state.touchValues.touchDownPosX;
 
-    // set new values to css- object-position
+    // set new values to css object-position
     if (state.touchValues && state.touchValues.touchDown)
       itemRef.current.style.objectPosition = `${objectPosX + movementX / 5}px`;
   }
 
-  if (children && (children as any).type === "img") {
-    return <img width="300" height="300" src={(children as any).props} {...animatedItemNodeProps} alt="" {...(children as any).props} />
-  }
-  else if (children && (children as any).type !== "img") {
-    return <canvas width="300" height="300" {...(children as any).props} {...animatedItemNodeProps}>{children}</canvas>
-  }
+  if (children) return <canvas {...animatedItemNodeProps} width="300" height="300" {...(children as any).props} />
+
   else return null;
-}))
+})
