@@ -1,3 +1,4 @@
+import React from "react";
 import { IActionType, IPointerValues, ITouchValues } from "./interfaces";
 
 export const navigateToLeft = (): IActionType => ({
@@ -10,21 +11,31 @@ export const navigateToRight = (): IActionType => ({
 
 export const moveWithAnimation = (direction: string): IActionType => ({
   type: "MOVE_WITH_ANIMATION",
-  direction
+  direction,
 });
 
-export const setItems = (items: (React.ReactChild | React.ReactFragment | React.ReactPortal)[], infinite: boolean): IActionType => ({
+export const setItems = (
+  items: (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+  infinite: boolean
+): IActionType => ({
   type: "SET_ITEMS",
   items,
-  infinite
-})
+  infinite,
+});
 
-export const setPointerChanges = (pointerValues: IPointerValues): IActionType => ({
+export const getItemAt = (index: number): IActionType => ({
+  type: "GET_ITEM_AT",
+  itemIndex: index,
+});
+
+export const setPointerChanges = (
+  pointerValues: IPointerValues
+): IActionType => ({
   type: "SET_POINTER_CHANGES",
-  pointerValues
+  pointerValues,
 });
 
 export const setTouchChanges = (touchValues: ITouchValues): IActionType => ({
   type: "SET_TOUCH_CHANGES",
-  touchValues
+  touchValues,
 });

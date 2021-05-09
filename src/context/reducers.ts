@@ -27,6 +27,12 @@ export const reducer = (state: IState, action: IActionType): IState => {
       };
     }
 
+    case "GET_ITEM_AT":
+      return {
+        ...state,
+        itemToShow: state.linkedList.getItemAt(action.itemIndex),
+      };
+
     case "SET_POINTER_CHANGES": {
       if (action.pointerValues.pointerDownPosX)
         return { ...state, pointerValues: action.pointerValues };

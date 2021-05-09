@@ -4,7 +4,7 @@ export interface IState {
     linkedList: LinkedList;
     itemToShow?: any;
     items?: (React.ReactChild | React.ReactFragment | React.ReactPortal)[];
-    itemDirection?: string; 
+    itemDirection?: string;
     pointerValues?: IPointerValues;
     touchValues?: ITouchValues;
 }
@@ -18,13 +18,14 @@ export interface ITouchValues {
     touchDownPosX?: number;
 }
 
-export interface IActionType{
+export interface IActionType {
     type: string;
     items?: (React.ReactChild | React.ReactFragment | React.ReactPortal)[];
     infinite?: boolean;
     direction?: string;
     pointerValues?: IPointerValues;
     touchValues?: ITouchValues;
+    itemIndex?: number;
 }
 
 export enum NavigDirection {

@@ -39,6 +39,12 @@ class LinkedList {
     return newNode;
   }
 
+  getItemAt(i) {
+    let node = this.head;
+    for (let j = 0; j < i; j++) node = node.next;
+    return node;
+  }
+
   setItems(arr) {
     for (let i = 0; i < arr.length; i++) {
       this.addtoLast(arr[i]);

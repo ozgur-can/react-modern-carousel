@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import { IActionType, IState, reducer, state, NavigDirection, setItems } from '../context';
 import NavigButton from './NavigButton';
 import { AnimatedItem } from './AnimatedItem';
+import BottomNavBar from './BottomNavBar';
 export interface CarouselProps {
     infinite: boolean;
 }
@@ -25,6 +26,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
                 {mainState.itemToShow && mainState.itemToShow.nodeContent ? mainState.itemToShow.nodeContent : null}
             </AnimatedItem>
             <NavigButton direction={NavigDirection.Right} />
+            <BottomNavBar/>
         </AppCtx.Provider>
     )
 }
