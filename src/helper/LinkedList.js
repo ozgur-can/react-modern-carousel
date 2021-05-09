@@ -1,7 +1,6 @@
 class LinkedList {
   constructor(circular) {
     this.head = null; // one head
-    this.tail = null;
     this.length = 0;
     this.circular = circular;
   }
@@ -18,7 +17,7 @@ class LinkedList {
     } else {
       this.length++;
       let now = this.head;
-      let newNode = {
+      let node = {
         nodeContent: nodeContent,
         prev: null,
         next: null,
@@ -27,16 +26,15 @@ class LinkedList {
 
       while (now.next != null) now = now.next;
 
-      now.next = newNode;
-      newNode.prev = now;
-      // newNode.next = this.head; //yeni
+      now.next = node;
+      node.prev = now;
     }
   }
   
   getLast() {
-    let newNode = this.head;
-    while (newNode.next != null) newNode = newNode.next;
-    return newNode;
+    let node = this.head;
+    while (node.next != null) node = node.next;
+    return node;
   }
 
   getItemAt(i) {
