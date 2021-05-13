@@ -1,7 +1,7 @@
 import { IActionType, IState } from "./interfaces";
 import { LinkedList } from "../helper/LinkedList";
 
-export const reducer = (state: IState, action: IActionType): IState => {
+export const reducer = (state: IState = { itemToShow: null }, action: IActionType): IState => {
   switch (action.type) {
     case "LEFT":
       if (state.itemToShow.prev != null)

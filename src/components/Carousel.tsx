@@ -3,6 +3,7 @@ import { IActionType, IState, reducer, state, NavigDirection, setItems } from '.
 import NavigButton from './NavigButton';
 import { AnimatedItem } from './AnimatedItem';
 import BottomNavBar from './BottomNavBar';
+import "../style/index.scss";
 export interface CarouselProps {
     infinite: boolean;
 }
@@ -13,10 +14,16 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
 
     useEffect(() => {
-        dispatch(setItems(React.Children.toArray(children!), infinite));
-        return () => {
-            // clean up            
+        if (children) {
+            let elements: any = React.Children.toArray(children);
+            for (let i = 0; i < elements.length; i++)
+                if (elements[i].type === "div")
+                    elements[i] = React.createElement("canvas", { value: elements[i].props.children });
+
+            dispatch(setItems(elements, infinite));
         }
+
+        return () => dispatch(setItems([], infinite))
     }, [children]);
 
     return (
@@ -26,7 +33,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
                 {mainState.itemToShow && mainState.itemToShow.nodeContent ? mainState.itemToShow.nodeContent : null}
             </AnimatedItem>
             <NavigButton direction={NavigDirection.Right} />
-            <BottomNavBar/>
+            <BottomNavBar />
         </AppCtx.Provider>
     )
 }

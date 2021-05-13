@@ -1,7 +1,7 @@
 import React from 'react'
 import { LinkedList } from '../helper/LinkedList';
 export interface IState {
-    linkedList: LinkedList;
+    linkedList?: LinkedList;
     itemToShow?: any;
     items?: (React.ReactChild | React.ReactFragment | React.ReactPortal)[];
     itemDirection?: string;

@@ -1,19 +1,63 @@
-import React, { useCallback, useContext, memo, useRef } from 'react'
+import React, { useCallback, useContext, memo, useRef, useEffect, AnimationEvent } from 'react'
 import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { CanvasProps, getObjectPosX, initialCSS, isMobile, nonTextElementTypes, setCssAnimation, textElementTypes } from '../helper';
+import { getObjectPosX, initialCSS, isMobile, nonTextElementTypes, setCssAnimation, setCssAnimationDefault, setInitialCSS, textElementTypes } from '../helper';
+import AnimatedItemChild from './AnimatedItemChild';
 import { AppCtx } from './Carousel';
 
-export const AnimatedItem = memo<CanvasProps>(({ children }) => {
+export const AnimatedItem: React.FC = (({ children }) => {
   const { state, dispatch } = useContext(AppCtx);
-  const itemRef = useRef<HTMLCanvasElement>(null);
+  let itemRef = useRef<HTMLCanvasElement | HTMLImageElement>(null); // canvas, img, video
   let directionX: NavigDirection = null;
   let movementX: number = null;
   let objectPosX: number = null;
 
+  useEffect(() => {
+    let ctx: CanvasRenderingContext2D;
+
+    if (itemRef && itemRef.current) {
+      if (itemRef.current.nodeName === "CANVAS") {
+        ctx = ((itemRef.current) as HTMLCanvasElement).getContext("2d");
+        ctx.clearRect(0, 0, itemRef.current.width, itemRef.current.height);
+        ctx.font = "bold 17px Garamond";
+        let textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
+
+        const maxWidth = 180;
+        const lineHeight = 25;
+        const x = (itemRef.current.width - maxWidth) / 2;
+        let y = 30;
+
+        // text wrapping for canvas
+        let words = textValue.split(' ');
+        let line = '';
+        for (let n = 0; n < words.length; n++) {
+          let testLine = line + words[n] + ' ';
+          let metrics = ctx.measureText(testLine);
+          let testWidth = metrics.width;
+          if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+          }
+          else line = testLine;
+        }
+
+        ctx.fillText(line, x, y);
+      }
+      
+      setInitialCSS(itemRef);
+    }
+
+    return () => { }
+
+  }, [state.itemToShow]);
+
   const animatedItemNodeProps = {
     style: initialCSS,
     draggable: false,
-    ref: (node: HTMLCanvasElement) => onRefChanged(node),
+    onAnimationEnd: () => {
+      itemRef.current.style.animation = undefined;
+      itemRef.current.classList.remove("spin");
+    },
     onPointerDown: (t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null,
     onPointerUp: (t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null,
     onPointerMove: (t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null,
@@ -21,54 +65,6 @@ export const AnimatedItem = memo<CanvasProps>(({ children }) => {
     onTouchStart: (t: TouchEvent) => isMobile ? onTouchStartHandler(t) : null,
     onTouchEnd: (t: TouchEvent) => isMobile ? onTouchEndHandler(t) : null,
     onTouchMove: (t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null
-  }
-
-  // detects ref changes and draw canvas for elements
-  const onRefChanged = useCallback((node: HTMLCanvasElement) => {
-    itemRef.current = node;
-
-    let ctx: CanvasRenderingContext2D;
-    if (node) {
-      ctx = node.getContext("2d");
-      ctx.clearRect(0, 0, node.width, node.height);
-      drawCtx((children as any).type, ctx, node);
-    }
-
-  }, [state.itemToShow]);
-
-  const drawCtx = (elementType: string, ctx: CanvasRenderingContext2D, node: HTMLCanvasElement) => {
-
-    if (textElementTypes.indexOf(elementType) === -1) {
-      let img = new Image();
-      img.src = state.itemToShow ? state.itemToShow.nodeContent.props.src : "";
-      img.onload = function () {
-        ctx.drawImage(img, 0, 0);
-      }
-    }
-    else if (nonTextElementTypes.indexOf(elementType) === -1) {
-      ctx.font = "bold 17px Garamond";
-      const maxWidth = 180;
-      const lineHeight = 25;
-      const x = (node.width - maxWidth) / 2;
-      let y = 30;
-
-      // text wrapping for canvas
-      let words = node.textContent.split(' ');
-      let line = '';
-      for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = ctx.measureText(testLine);
-        let testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-          ctx.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
-        }
-        else line = testLine;
-      }
-
-      ctx.fillText(line, x, y);
-    }
   }
 
   const onPointerDownHandler = (t: PointerEvent) => {
@@ -91,9 +87,9 @@ export const AnimatedItem = memo<CanvasProps>(({ children }) => {
     // success - next - pointer up
     if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
     // success - prev - pointer up
-    else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
 
-    setCssAnimation(itemRef);
+    setCssAnimationDefault(itemRef);
   }
 
   const onPointerOutHandler = (t: PointerEvent) => {
@@ -108,13 +104,11 @@ export const AnimatedItem = memo<CanvasProps>(({ children }) => {
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
-    if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
-      dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
     // success - prev - pointer up
-    else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width)
-      dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
 
-    setCssAnimation(itemRef);
+    setCssAnimationDefault(itemRef);
   }
 
   const onPointerMoveHandler = (t: PointerEvent) => {
@@ -151,7 +145,7 @@ export const AnimatedItem = memo<CanvasProps>(({ children }) => {
     else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width)
       dispatch(navigateToLeft());
 
-    setCssAnimation(itemRef);
+    setCssAnimationDefault(itemRef);
   }
 
   const onTouchMoveHandler = (t: TouchEvent) => {
@@ -166,7 +160,12 @@ export const AnimatedItem = memo<CanvasProps>(({ children }) => {
       itemRef.current.style.objectPosition = `${objectPosX + movementX / 5}px`;
   }
 
-  if (children) return <canvas {...animatedItemNodeProps} width="300" height="300" {...(children as any).props} />
-
+  if (children) return (
+    <div>
+      <AnimatedItemChild {...animatedItemNodeProps} ref={itemRef} type={(children as any).type}>
+        {children}
+      </AnimatedItemChild>
+    </div>
+  )
   else return null;
 })
