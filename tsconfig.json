@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist/",
-      "sourceMap": true,
-      "noImplicitAny": true,
-      "module": "CommonJS",
-      "target": "es5",
-      "jsx": "react",
-      "allowJs": true,
-      "allowSyntheticDefaultImports": true,
-      "moduleResolution": "Node",
-      "esModuleInterop": true
-    }
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "CommonJS",
+    "target": "es2019",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true
   }
+}
