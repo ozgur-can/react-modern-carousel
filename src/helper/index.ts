@@ -6,17 +6,26 @@ export const setCssAnimation = (
   itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
 ) => {
   itemRef.current.style.objectPosition = "0px";
-  itemRef.current.style.animation = "shake 1s linear"
-  itemRef.current.classList.add("shake");
 };
 
 export const setCssAnimationDefault = (
   itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
 ) => {
   itemRef.current.style.objectPosition = "0px";
-  itemRef.current.style.transition = "all 400ms ease-out";
+  itemRef.current.style.transition = "all 200ms ease-out";
+};
+
+export const setCssAnimationOnload = (
+  itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
+) => {
+  itemRef.current.style.objectPosition = "0px";
+  itemRef.current.style.animation = "anim 0.4s linear";
+};
+
+export const setCssAnimationEnd = (
+  itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
+) => {
   itemRef.current.style.animation = undefined;
-  itemRef.current.classList.remove("shake");
 };
 
 export const getObjectPosX = (
@@ -43,22 +52,8 @@ export const initialCSS: React.CSSProperties = {
   objectFit: "none",
   objectPosition: "0px",
   userSelect: "none",
-  border: "1px solid black",
-  borderRadius: "12px",
-  animation: "shake 1s linear",
+  borderRadius: "5px",
 };
-
-export const setInitialCSS = (itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>) => {
-  itemRef.current.style.width = "300px";
-  itemRef.current.style.height = "300px";
-  itemRef.current.style.position = "relative";
-  itemRef.current.style.objectFit = "none";
-  itemRef.current.style.objectPosition = "0px";
-  itemRef.current.style.userSelect = "none";
-  itemRef.current.style.border = "1px solid black";
-  itemRef.current.style.borderRadius = "12px";
-  itemRef.current.style.animation = "shake 1s linear";
-}
 
 export const textElementTypes: string[] = [
   "h1",
@@ -85,5 +80,3 @@ export const textElementTypes: string[] = [
   "b",
   "a",
 ];
-
-export const nonTextElementTypes: string[] = ["img", "video"];

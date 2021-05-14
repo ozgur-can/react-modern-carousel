@@ -3,7 +3,7 @@ import { IActionType, IState, reducer, state, NavigDirection, setItems } from '.
 import NavigButton from './NavigButton';
 import { AnimatedItem } from './AnimatedItem';
 import BottomNavBar from './BottomNavBar';
-import "../style/index.scss";
+import { textElementTypes } from '../helper';
 export interface CarouselProps {
     infinite: boolean;
 }
@@ -17,9 +17,10 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
         if (children) {
             let elements: any = React.Children.toArray(children);
             for (let i = 0; i < elements.length; i++)
-                if (elements[i].type === "div")
+                if (textElementTypes.indexOf(elements[i].type) > -1) // if element is text based, create canvas for displaying as carousel item 
                     elements[i] = React.createElement("canvas", { value: elements[i].props.children });
 
+            // add elements to the state after above change
             dispatch(setItems(elements, infinite));
         }
 

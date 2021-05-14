@@ -1,25 +1,26 @@
-import React, { useCallback, useContext, memo, useRef, useEffect, AnimationEvent } from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { getObjectPosX, initialCSS, isMobile, nonTextElementTypes, setCssAnimation, setCssAnimationDefault, setInitialCSS, textElementTypes } from '../helper';
+import { getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload } from '../helper';
 import AnimatedItemChild from './AnimatedItemChild';
 import { AppCtx } from './Carousel';
 
 export const AnimatedItem: React.FC = (({ children }) => {
   const { state, dispatch } = useContext(AppCtx);
-  let itemRef = useRef<HTMLCanvasElement | HTMLImageElement>(null); // canvas, img, video
+  let itemRef = useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
   let directionX: NavigDirection = null;
   let movementX: number = null;
   let objectPosX: number = null;
 
   useEffect(() => {
-    let ctx: CanvasRenderingContext2D;
-
     if (itemRef && itemRef.current) {
       if (itemRef.current.nodeName === "CANVAS") {
+        // set onload animation here because <canvas> doesn't support onload event
+        setCssAnimationOnload(itemRef);
+        let ctx: CanvasRenderingContext2D;
         ctx = ((itemRef.current) as HTMLCanvasElement).getContext("2d");
         ctx.clearRect(0, 0, itemRef.current.width, itemRef.current.height);
         ctx.font = "bold 17px Garamond";
-        let textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
+        const textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
 
         const maxWidth = 180;
         const lineHeight = 25;
@@ -27,7 +28,7 @@ export const AnimatedItem: React.FC = (({ children }) => {
         let y = 30;
 
         // text wrapping for canvas
-        let words = textValue.split(' ');
+        const words = textValue.split(' ');
         let line = '';
         for (let n = 0; n < words.length; n++) {
           let testLine = line + words[n] + ' ';
@@ -43,8 +44,6 @@ export const AnimatedItem: React.FC = (({ children }) => {
 
         ctx.fillText(line, x, y);
       }
-      
-      setInitialCSS(itemRef);
     }
 
     return () => { }
@@ -54,10 +53,6 @@ export const AnimatedItem: React.FC = (({ children }) => {
   const animatedItemNodeProps = {
     style: initialCSS,
     draggable: false,
-    onAnimationEnd: () => {
-      itemRef.current.style.animation = undefined;
-      itemRef.current.classList.remove("spin");
-    },
     onPointerDown: (t: PointerEvent) => !isMobile ? onPointerDownHandler(t) : null,
     onPointerUp: (t: PointerEvent) => !isMobile ? onPointerUpHandler(t) : null,
     onPointerMove: (t: PointerEvent) => !isMobile ? onPointerMoveHandler(t) : null,
@@ -85,9 +80,9 @@ export const AnimatedItem: React.FC = (({ children }) => {
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
-    if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
     // success - prev - pointer up
-    if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
 
     setCssAnimationDefault(itemRef);
   }
@@ -104,9 +99,9 @@ export const AnimatedItem: React.FC = (({ children }) => {
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
-    if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
     // success - prev - pointer up
-    if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
 
     setCssAnimationDefault(itemRef);
   }
@@ -116,7 +111,7 @@ export const AnimatedItem: React.FC = (({ children }) => {
     objectPosX = getObjectPosX(itemRef);
 
     // set new values to css object-position
-    if (state.pointerValues && state.pointerValues && state.pointerValues.pointerDown) {
+    if (state.pointerValues && state.pointerValues.pointerDown) {
       itemRef.current.style.objectPosition = `${objectPosX + 2 * t.movementX}px`;
     }
   }
@@ -139,10 +134,10 @@ export const AnimatedItem: React.FC = (({ children }) => {
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - mouse up
-    if (directionX === NavigDirection.Right && objectPosX > itemRef.current.width)
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width))
       dispatch(navigateToRight());
     // success - prev - mouse up
-    else if (directionX === NavigDirection.Left && objectPosX < -itemRef.current.width)
+    else if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width))
       dispatch(navigateToLeft());
 
     setCssAnimationDefault(itemRef);
