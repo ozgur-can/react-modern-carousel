@@ -2,12 +2,6 @@
 export const isMobile: boolean = navigator.userAgent.indexOf("Mobi") > -1;
 
 // animated item animation
-export const setCssAnimation = (
-  itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
-) => {
-  itemRef.current.style.objectPosition = "0px";
-};
-
 export const setCssAnimationDefault = (
   itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
 ) => {
@@ -42,7 +36,6 @@ export type CanvasProps = React.DetailedHTMLProps<
   React.CanvasHTMLAttributes<HTMLCanvasElement>,
   HTMLCanvasElement
 >;
-export type DivProps = React.DetailedHTMLProps<React.HTMLProps<HTMLDivElement>, HTMLDivElement>;
 
 // animated item initial css
 export const initialCSS: React.CSSProperties = {
