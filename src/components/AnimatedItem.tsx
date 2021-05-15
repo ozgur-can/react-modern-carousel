@@ -71,7 +71,7 @@ export const AnimatedItem: React.FC = (({ children }) => {
   const onPointerUpHandler = (t: PointerEvent) => {
     // detect move direction
     if (state.pointerValues && state.pointerValues.pointerDownPosX < t.clientX) directionX = NavigDirection.Right;
-    else if (state.pointerValues && state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Right;
+    else if (state.pointerValues && state.pointerValues.pointerDownPosX > t.clientX) directionX = NavigDirection.Left;
 
     // set pointer changes to the store
     dispatch(setPointerChanges({ pointerDown: false }));
