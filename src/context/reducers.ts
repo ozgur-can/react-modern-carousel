@@ -14,9 +14,6 @@ export const reducer = (state: IState, action: IActionType): IState => {
         return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.length };
       else return { ...state };
 
-    case "MOVE_WITH_ANIMATION":
-      return { ...state, itemDirection: action.direction };
-
     case "SET_ITEMS": {
       const linkedList = new LinkedList(action.infinite);
       linkedList.setItems(action.items);

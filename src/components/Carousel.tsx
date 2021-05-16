@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useReducer } from 'react';
-import { IActionType, IState, reducer, state, NavigDirection, setItems } from '../context';
-import NavigButton from './NavigButton';
+import { IActionType, IState, reducer, state, setItems, NavigDirection } from '../context';
 import { AnimatedItem } from './AnimatedItem';
 import Pagination from './Pagination';
 import { textElementTypes } from '../helper';
+import NavigButtons from './NavigButtons';
 export interface CarouselProps {
     infinite: boolean;
 }
@@ -31,8 +31,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
                 {mainState.itemToShow && mainState.itemToShow.nodeContent ? mainState.itemToShow.nodeContent : null}
             </AnimatedItem>
             <Pagination />
-            <NavigButton direction={NavigDirection.Left} />
-            <NavigButton direction={NavigDirection.Right} />
+            <NavigButtons />
         </AppCtx.Provider >
     )
 }

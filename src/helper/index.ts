@@ -43,7 +43,8 @@ export const carouselCSS: React.CSSProperties = {
   height: isMobile ? window.innerHeight / 2 : 400,
   margin: "auto",
   display: "flex",
-  justifyContent: "center"
+  justifyContent: "center",
+  // alignItems: "center"
 }
 
 // animated item initial css
@@ -65,6 +66,14 @@ export const paginationCSS: React.CSSProperties = {
   height: "1.5vh",
   padding: "0.5rem",
   margin: "auto"
+};
+
+// navigation buttons css
+export const NavigButtonsCSS: React.CSSProperties = {
+  width: carouselCSS.width,
+  display: "flex",
+  justifyContent: "space-between",
+  margin: "auto",
 };
 
 export const textElementTypes: string[] = [

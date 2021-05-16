@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { getItemAt } from "../context";
 import { paginationCSS, setCssAnimationEnd } from "../helper";
 import { AppCtx } from "./Carousel";
-import { PaginationButton } from "./PaginationButton";
+import { PaginationButton } from "./styled-components/PaginationButton";
 
 export interface PaginationProps { }
 
