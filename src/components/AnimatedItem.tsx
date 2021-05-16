@@ -13,37 +13,8 @@ export const AnimatedItem: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (itemRef && itemRef.current) {
-      if (itemRef.current.nodeName === "CANVAS") {
-        // set onload animation here because <canvas> doesn't support onload event
-        setCssAnimationOnload(itemRef);
-        let ctx: CanvasRenderingContext2D;
-        ctx = ((itemRef.current) as HTMLCanvasElement).getContext("2d");
-        ctx.clearRect(0, 0, itemRef.current.width, itemRef.current.height);
-        ctx.font = "bold 17px Garamond";
-        const textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
-
-        const maxWidth = 180;
-        const lineHeight = 25;
-        const x = (itemRef.current.width - maxWidth) / 2;
-        let y = 30;
-
-        // text wrapping for canvas
-        const words = textValue.split(' ');
-        let line = '';
-        for (let n = 0; n < words.length; n++) {
-          let testLine = line + words[n] + ' ';
-          let metrics = ctx.measureText(testLine);
-          let testWidth = metrics.width;
-          if (testWidth > maxWidth && n > 0) {
-            ctx.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-          }
-          else line = testLine;
-        }
-
-        ctx.fillText(line, x, y);
-      }
+      if (itemRef.current.nodeName === "CANVAS")
+        updateCanvas();
     }
 
     return () => { }
@@ -60,6 +31,38 @@ export const AnimatedItem: React.FC = ({ children }) => {
     onTouchStart: (t: TouchEvent) => isMobile ? onTouchStartHandler(t) : null,
     onTouchEnd: (t: TouchEvent) => isMobile ? onTouchEndHandler(t) : null,
     onTouchMove: (t: TouchEvent) => isMobile ? onTouchMoveHandler(t) : null
+  }
+
+  const updateCanvas = () => {
+    // set onload animation here because <canvas> doesn't support onload event
+    setCssAnimationOnload(itemRef);
+    let ctx: CanvasRenderingContext2D;
+    ctx = ((itemRef.current) as HTMLCanvasElement).getContext("2d");
+    ctx.clearRect(0, 0, itemRef.current.width, itemRef.current.height);
+    ctx.font = "bold 18px Times New Roman";
+    const textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
+
+    const maxWidth = !isMobile ? carouselCSS.width as number / 2 : window.innerWidth / 2;
+    const lineHeight = 25;
+    const x = !isMobile ? maxWidth / 2 : ((itemRef.current.width - maxWidth) / 1.5);
+    let y = carouselCSS.height as number / 10;
+
+    // text wrapping for canvas
+    const words = textValue.split(' ');
+    let line = '';
+    for (let n = 0; n < words.length; n++) {
+      let testLine = line + words[n] + ' ';
+      let metrics = ctx.measureText(testLine);
+      let testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      }
+      else line = testLine;
+    }
+
+    ctx.fillText(line, x, y);
   }
 
   const onPointerDownHandler = (t: PointerEvent) => {
