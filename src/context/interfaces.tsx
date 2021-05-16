@@ -7,6 +7,7 @@ export interface IState {
     itemDirection?: string;
     pointerValues?: IPointerValues;
     touchValues?: ITouchValues;
+    itemIndex?: number;
 }
 export interface IPointerValues {
     pointerDown?: boolean;

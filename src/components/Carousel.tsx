@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import { IActionType, IState, reducer, state, NavigDirection, setItems } from '../context';
 import NavigButton from './NavigButton';
 import { AnimatedItem } from './AnimatedItem';
-import BottomNavBar from './BottomNavBar';
+import Pagination from './Pagination';
 import { textElementTypes } from '../helper';
 export interface CarouselProps {
     infinite: boolean;
@@ -12,7 +12,6 @@ export const AppCtx = createContext<{ state: IState, dispatch: React.Dispatch<IA
 
 const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
-
     useEffect(() => {
         if (children) {
             let elements: any = React.Children.toArray(children);
@@ -23,19 +22,18 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
             // add elements to the state after above change
             dispatch(setItems(elements, infinite));
         }
-
         return () => dispatch(setItems([], infinite))
     }, [children]);
 
     return (
         <AppCtx.Provider value={{ state: mainState, dispatch }}>
-            <NavigButton direction={NavigDirection.Left} />
             <AnimatedItem>
                 {mainState.itemToShow && mainState.itemToShow.nodeContent ? mainState.itemToShow.nodeContent : null}
             </AnimatedItem>
+            <Pagination />
+            <NavigButton direction={NavigDirection.Left} />
             <NavigButton direction={NavigDirection.Right} />
-            <BottomNavBar />
-        </AppCtx.Provider>
+        </AppCtx.Provider >
     )
 }
 

@@ -13,11 +13,11 @@ export const setCssAnimationOnload = (
   itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
 ) => {
   itemRef.current.style.objectPosition = "0px";
-  itemRef.current.style.animation = "anim 0.4s linear";
+  itemRef.current.style.animation = "CarouselAnimation 0.4s linear";
 };
 
 export const setCssAnimationEnd = (
-  itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement>
+  itemRef: React.MutableRefObject<HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | HTMLDivElement>
 ) => {
   itemRef.current.style.animation = undefined;
 };
@@ -37,15 +37,34 @@ export type CanvasProps = React.DetailedHTMLProps<
   HTMLCanvasElement
 >;
 
+// carousel css settings
+export const carouselCSS: React.CSSProperties = {
+  width: isMobile ? "95%" : 400,
+  height: isMobile ? window.innerHeight / 2 : 400,
+  margin: "auto",
+  display: "flex",
+  justifyContent: "center"
+}
+
 // animated item initial css
 export const initialCSS: React.CSSProperties = {
-  width: 300,
-  height: 300,
-  position: "relative",
+  width: carouselCSS.width,
+  height: "inherit",
   objectFit: "none",
   objectPosition: "0px",
   userSelect: "none",
   borderRadius: "5px",
+  border: "1px solid black"
+};
+
+// pagination css
+export const paginationCSS: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  width: carouselCSS.width,
+  height: "1.5vh",
+  padding: "0.5rem",
+  margin: "auto"
 };
 
 export const textElementTypes: string[] = [

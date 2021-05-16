@@ -1,16 +1,17 @@
 import { IActionType, IState } from "./interfaces";
 import { LinkedList } from "../helper/LinkedList";
 
-export const reducer = (state: IState = { itemToShow: null }, action: IActionType): IState => {
+export const reducer = (state: IState, action: IActionType): IState => {
+
   switch (action.type) {
     case "LEFT":
       if (state.itemToShow.prev != null)
-        return { ...state, itemToShow: state.itemToShow.prev };
+        return { ...state, itemToShow: state.itemToShow.prev, itemIndex: state.itemToShow.prev.length };
       else return { ...state };
 
     case "RIGHT":
       if (state.itemToShow.next != null)
-        return { ...state, itemToShow: state.itemToShow.next };
+        return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.length };
       else return { ...state };
 
     case "MOVE_WITH_ANIMATION":
@@ -24,6 +25,7 @@ export const reducer = (state: IState = { itemToShow: null }, action: IActionTyp
         linkedList: linkedList,
         itemToShow: linkedList.head,
         items: action.items,
+        itemIndex: linkedList.head.length
       };
     }
 
@@ -31,6 +33,7 @@ export const reducer = (state: IState = { itemToShow: null }, action: IActionTyp
       return {
         ...state,
         itemToShow: state.linkedList.getItemAt(action.itemIndex),
+        itemIndex: action.itemIndex + 1
       };
 
     case "SET_POINTER_CHANGES": {

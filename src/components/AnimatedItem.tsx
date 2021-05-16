@@ -1,10 +1,10 @@
 import React, { useContext, useRef, useEffect } from 'react'
 import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload } from '../helper';
+import { carouselCSS, getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload } from '../helper';
 import AnimatedItemChild from './AnimatedItemChild';
 import { AppCtx } from './Carousel';
 
-export const AnimatedItem: React.FC = (({ children }) => {
+export const AnimatedItem: React.FC = ({ children }) => {
   const { state, dispatch } = useContext(AppCtx);
   let itemRef = useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
   let directionX: NavigDirection = null;
@@ -152,15 +152,15 @@ export const AnimatedItem: React.FC = (({ children }) => {
 
     // set new values to css object-position
     if (state.touchValues && state.touchValues.touchDown)
-      itemRef.current.style.objectPosition = `${objectPosX + movementX / 5}px`;
+      itemRef.current.style.objectPosition = `${objectPosX + movementX / 35}px`;
   }
 
   if (children) return (
-    <div>
+    <div style={carouselCSS}>
       <AnimatedItemChild {...animatedItemNodeProps} ref={itemRef} type={(children as any).type}>
         {children}
       </AnimatedItemChild>
     </div>
   )
   else return null;
-})
+}
