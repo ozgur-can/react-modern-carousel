@@ -7,7 +7,9 @@ import "./style/index.scss";
 
 const App: React.FC = () => {
     return (
-        <Carousel infinite={true}>
+        <Carousel
+            infinite={true}
+            interval={{ isExist: true, delay: 3500 }}>
             <img src={Image1} />
             <h1>The line between failure and success is so fine. . . that we are often on the line and do not know it.</h1>
             <video width="320" height="240" src="https://www.w3schools.com/html/movie.mp4" />

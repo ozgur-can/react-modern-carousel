@@ -33,3 +33,8 @@ export enum NavigDirection {
     Left = "<",
     Right = ">",
 }
+
+export interface IInterval {
+    isExist: boolean;
+    delay: number | string;
+}

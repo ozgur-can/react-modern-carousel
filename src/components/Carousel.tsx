@@ -1,16 +1,17 @@
 import React, { createContext, useEffect, useReducer } from 'react';
-import { IActionType, IState, reducer, state, setItems, NavigDirection } from '../context';
+import { IActionType, IState, reducer, state, setItems, IInterval } from '../context';
 import { AnimatedItem } from './AnimatedItem';
 import Pagination from './Pagination';
 import { textElementTypes } from '../helper';
 import NavigButtons from './NavigButtons';
 export interface CarouselProps {
     infinite: boolean;
+    interval: IInterval;
 }
 
 export const AppCtx = createContext<{ state: IState, dispatch: React.Dispatch<IActionType> }>({ state, dispatch: null });
 
-const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
+const Carousel: React.FC<CarouselProps> = ({ infinite, children,interval }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
     useEffect(() => {
         if (children) {
@@ -27,7 +28,7 @@ const Carousel: React.FC<CarouselProps> = ({ infinite, children }) => {
 
     return (
         <AppCtx.Provider value={{ state: mainState, dispatch }}>
-            <AnimatedItem>
+            <AnimatedItem interval={interval}>
                 {mainState.itemToShow && mainState.itemToShow.nodeContent ? mainState.itemToShow.nodeContent : null}
             </AnimatedItem>
             <Pagination />

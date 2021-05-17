@@ -1,15 +1,16 @@
 import React, { useContext, useRef, useEffect } from 'react'
-import { navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
-import { carouselCSS, getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload } from '../helper';
+import { IInterval, navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
+import { carouselCSS, getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload, useInterval } from '../helper';
 import AnimatedItemChild from './AnimatedItemChild';
 import { AppCtx } from './Carousel';
 
-export const AnimatedItem: React.FC = ({ children }) => {
+export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, interval }) => {
   const { state, dispatch } = useContext(AppCtx);
   let itemRef = useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
   let directionX: NavigDirection = null;
   let movementX: number = null;
   let objectPosX: number = null;
+  interval.isExist ? useInterval(interval.delay) : null;
 
   useEffect(() => {
     if (itemRef && itemRef.current) {

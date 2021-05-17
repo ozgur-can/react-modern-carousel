@@ -1,3 +1,7 @@
+import { useContext, useEffect } from "react";
+import { AppCtx } from "../components/Carousel";
+import { navigateToRight } from "../context/actions";
+
 // checks device whether mobile or not
 export const isMobile: boolean = navigator.userAgent.indexOf("Mobi") > -1;
 
@@ -101,3 +105,15 @@ export const textElementTypes: string[] = [
   "b",
   "a",
 ];
+
+export const useInterval = (delay: number | string) => {
+  const { dispatch } = useContext(AppCtx);
+  let interval: number;
+  useEffect(() => {
+    interval = window.setInterval(() => {
+      dispatch(navigateToRight());
+    }, typeof delay === 'string' ? parseFloat(delay) : delay);
+
+    return () => window.clearInterval(interval);
+  }, []);
+}
