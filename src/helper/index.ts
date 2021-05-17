@@ -41,14 +41,13 @@ export type CanvasProps = React.DetailedHTMLProps<
   HTMLCanvasElement
 >;
 
-// carousel css settings
+// set carousel css settings (width & height ...)
 export const carouselCSS: React.CSSProperties = {
   width: isMobile ? "95%" : 400,
   height: isMobile ? window.innerHeight / 2 : 400,
   margin: "auto",
   display: "flex",
   justifyContent: "center",
-  // alignItems: "center"
 }
 
 // animated item initial css
@@ -110,9 +109,8 @@ export const useInterval = (delay: number | string) => {
   const { dispatch } = useContext(AppCtx);
   let interval: number;
   useEffect(() => {
-    interval = window.setInterval(() => {
-      dispatch(navigateToRight());
-    }, typeof delay === 'string' ? parseFloat(delay) : delay);
+    interval = window.setInterval(() => dispatch(navigateToRight()),
+      typeof delay === 'string' ? parseFloat(delay) : delay);
 
     return () => window.clearInterval(interval);
   }, []);
