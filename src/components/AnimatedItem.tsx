@@ -41,8 +41,10 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     ctx = ((itemRef.current) as HTMLCanvasElement).getContext("2d");
     ctx.clearRect(0, 0, itemRef.current.width, itemRef.current.height);
     ctx.font = "bold 18px Times New Roman";
-    const textValue = itemRef.current.innerHTML.replace(/canvas|<|>|value|"|=/g, "").split("/")[0];
 
+    // get text in node
+    const textRegex = /value=\"([^"]*)\"/;
+    const textValue = textRegex.exec(itemRef.current.outerHTML)[1];
     const maxWidth = !isMobile ? carouselCSS.width as number / 2 : window.innerWidth / 2;
     const lineHeight = 25;
     const x = !isMobile ? maxWidth / 2 : ((itemRef.current.width - maxWidth) / 1.5);
@@ -84,9 +86,9 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
-    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
     // success - prev - pointer up
-    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
 
     setCssAnimationDefault(itemRef);
   }
@@ -103,9 +105,9 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
-    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
     // success - prev - pointer up
-    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
+    if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
 
     setCssAnimationDefault(itemRef);
   }
@@ -138,11 +140,9 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - mouse up
-    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width))
-      dispatch(navigateToRight());
+    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
     // success - prev - mouse up
-    else if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width))
-      dispatch(navigateToLeft());
+    else if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
 
     setCssAnimationDefault(itemRef);
   }

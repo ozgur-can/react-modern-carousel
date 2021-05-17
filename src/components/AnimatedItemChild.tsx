@@ -31,17 +31,19 @@ const AnimatedItemChild = React.forwardRef<HTMLImageElement | HTMLCanvasElement 
             return React.createElement(props.type, {
                 ...getSpecificProps(props, ["onPointerDown", "onPointerMove", "onPointerOut", "onPointerUp", "onTouchStart", "onTouchEnd", "onTouchMove", "style", "draggable"]),
                 onAnimationEnd: () => setCssAnimationEnd(childRef),
-                ref: (node: HTMLCanvasElement) => useChildRef(node)
-            }, props.children)
+                ref: (node: HTMLCanvasElement) => useChildRef(node),
+                value: props.children.props.value
+            });
         } else if (props.type === "video") {
             return React.createElement(props.type, {
-                ...getSpecificProps(props, ["onPointerDown", "onPointerMove", "onPointerOut", "onPointerUp", "onTouchStart", "onTouchEnd", "onTouchMove", "style", "draggable"]),
+                ...getSpecificProps(props, ["onPointerDown", "onPointerMove", "onPointerOut", "onPointerUp", "onTouchStart", "onTouchEnd", "onTouchMove", "draggable"]),
                 onLoadStart: () => setCssAnimationOnload(childRef),
                 onAnimationEnd: () => setCssAnimationEnd(childRef),
                 ref: (node: HTMLVideoElement) => useChildRef(node),
+                style: { ...props.style, objectFit: "contain" },
                 src: props.children.props.src,
-                controls: true
-            }, props.children);
+                controls: true,
+            });
         }
     }
 })

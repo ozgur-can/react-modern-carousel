@@ -11,7 +11,7 @@ export interface CarouselProps {
 
 export const AppCtx = createContext<{ state: IState, dispatch: React.Dispatch<IActionType> }>({ state, dispatch: null });
 
-const Carousel: React.FC<CarouselProps> = React.memo(({ infinite, children,interval }) => {
+const Carousel: React.FC<CarouselProps> = React.memo(({ infinite, children, interval }) => {
     const [mainState, dispatch] = useReducer(reducer, state);
     useEffect(() => {
         if (children) {
