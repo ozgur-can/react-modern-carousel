@@ -1,6 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 
-export const NavigButton = styled.button`
+export const NavigButton = React.memo(styled.button`
     border-radius: 3px;
     border: none;
     background: #cfdac8;
@@ -15,4 +16,4 @@ export const NavigButton = styled.button`
         &: focus {
         transform: scale(1);
     }
-`;
+`);

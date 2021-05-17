@@ -1,6 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 
-export const PaginationButton = styled.button<{ bgColor?: string }>`
+export const PaginationButton = React.memo(styled.button<{ bgColor?: string }>`
     border-radius: 3px;
     border: none;
     background: ${({ bgColor }) => bgColor ? bgColor : "#c8c2bc"};
@@ -13,4 +14,4 @@ export const PaginationButton = styled.button<{ bgColor?: string }>`
         background: #7c9473;
         transform: scale(1);
     }
-`;
+`);

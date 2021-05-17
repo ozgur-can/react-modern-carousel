@@ -15,4 +15,4 @@ const NavigButtons: React.FC = () => {
     )
 }
 
-export default NavigButtons;
+export default React.memo(NavigButtons);

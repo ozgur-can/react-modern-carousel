@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { setCssAnimationEnd, setCssAnimationOnload } from "../helper";
 
 const AnimatedItemChild = React.forwardRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, any>((props, ref) => {
     const childRef = React.useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
 
-    const useChildRef = (node: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement) => {
+    const useChildRef = useCallback((node: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement) => {
         if (node) {
             childRef.current = node;
             if (typeof ref === 'function') ref(node);
             else if (ref) ref.current = node;
         }
-    }
+    }, [ref]);
 
     const getSpecificProps = (obj: any, toFilter?: string[]) => {
         let result = {};
