@@ -5,14 +5,10 @@ export const reducer = (state: IState, action: IActionType): IState => {
 
   switch (action.type) {
     case "LEFT":
-      if (state.itemToShow.prev != null)
-        return { ...state, itemToShow: state.itemToShow.prev, itemIndex: state.itemToShow.prev.length };
-      else return { ...state };
+      return { ...state, itemToShow: state.itemToShow.prev, itemIndex: state.itemToShow.prev.length };
 
     case "RIGHT":
-      if (state.itemToShow.next != null)
-        return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.length };
-      else return { ...state };
+      return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.length };
 
     case "SET_ITEMS": {
       const linkedList = new LinkedList(action.infinite);
