@@ -9,7 +9,7 @@ const App: React.FC = () => {
     return (
         <Carousel
             infinite={true}
-            interval={{ isExist: true, delay: 3500 }}>
+            interval={{ isExist: false, delay: 3500 }}>
             <div>Without deviation from the norm, progress is not possible.</div>
             <img src={Image2} />
             <video width="320" height="240" src="https://www.w3schools.com/html/mov_bbb.mp4" />

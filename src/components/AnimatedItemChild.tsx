@@ -21,10 +21,11 @@ const AnimatedItemChild = React.forwardRef<HTMLImageElement | HTMLCanvasElement 
     if (props.children) {
         if (props.type === "img") {
             return React.createElement(props.type, {
-                ...getSpecificProps(props, ["onPointerDown", "onPointerMove", "onPointerOut", "onPointerUp", "onTouchStart", "onTouchEnd", "onTouchMove", "style", "draggable"]),
+                ...getSpecificProps(props, ["onPointerDown", "onPointerMove", "onPointerOut", "onPointerUp", "onTouchStart", "onTouchEnd", "onTouchMove", "draggable"]),
                 onLoad: () => setCssAnimationOnload(childRef),
                 onAnimationEnd: () => setCssAnimationEnd(childRef),
                 ref: (node: HTMLImageElement) => useChildRef(node),
+                style: { ...props.style, objectFit: "fill" },
                 src: props.children.props.src
             })
         } else if (props.type === "canvas") {

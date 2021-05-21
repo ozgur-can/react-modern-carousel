@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useEffect } from 'react'
-import { IInterval, navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
+import React, { useContext, useRef, useEffect, useState } from 'react'
+import { IInterval, ITempTouch, navigateToLeft, navigateToRight, NavigDirection, setPointerChanges, setTouchChanges } from '../context';
 import { carouselCSS, getObjectPosX, initialCSS, isMobile, setCssAnimationDefault, setCssAnimationOnload, useInterval } from '../helper';
 import AnimatedItemChild from './AnimatedItemChild';
 import { AppCtx } from './Carousel';
@@ -7,19 +7,18 @@ import { AppCtx } from './Carousel';
 export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, interval }) => {
   const { state, dispatch } = useContext(AppCtx);
   let itemRef = useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
+  const [tempTouch, setTempTouch] = useState<ITempTouch>({ posX: null });
+  interval.isExist ? useInterval(interval.delay) : null;
+
   let directionX: NavigDirection = null;
   let movementX: number = null;
   let objectPosX: number = null;
-  interval.isExist ? useInterval(interval.delay) : null;
 
   useEffect(() => {
     if (itemRef && itemRef.current) {
       if (itemRef.current.nodeName === "CANVAS")
         updateCanvas();
     }
-
-    return () => { }
-
   }, [state.itemToShow]);
 
   const animatedItemNodeProps = {
@@ -82,7 +81,7 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     // set pointer changes to the store
     dispatch(setPointerChanges({ pointerDown: false }));
 
-    // get pointer position
+    // get item position
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
@@ -101,7 +100,7 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     // set pointer changes to the store
     dispatch(setPointerChanges({ pointerDown: false }));
 
-    // get pointer position
+    // get item position
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - pointer up
@@ -113,7 +112,7 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
   }
 
   const onPointerMoveHandler = (t: PointerEvent) => {
-    // get pointer position
+    // get item position
     objectPosX = getObjectPosX(itemRef);
 
     // set new values to css object-position
@@ -123,40 +122,50 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
   }
 
   const onTouchStartHandler = (t: TouchEvent) => {
-    // set default css, set touch changes to the store
+    // set default css
     itemRef.current.style.transition = "none";
-    dispatch(setTouchChanges({ touchDown: true, touchDownPosX: t.touches[0].clientX }));
   }
 
   const onTouchEndHandler = (t: TouchEvent) => {
-    // detect move direction
-    if (t.changedTouches[0].clientX - state.touchValues.touchDownPosX < 0) directionX = NavigDirection.Left;
-    else if (t.changedTouches[0].clientX - state.touchValues.touchDownPosX > 0) directionX = NavigDirection.Right;
-
     // set touch changes to the store
     dispatch(setTouchChanges({ touchDown: false }));
 
-    // get touch position
+    // get item position
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - mouse up
-    if (directionX === NavigDirection.Right && objectPosX > parseFloat(itemRef.current.style.width)) dispatch(navigateToLeft());
+    if (tempTouch.direction === NavigDirection.Right && objectPosX > itemRef.current.width * 2 / 3) dispatch(navigateToLeft());
     // success - prev - mouse up
-    else if (directionX === NavigDirection.Left && objectPosX < -parseFloat(itemRef.current.style.width)) dispatch(navigateToRight());
+    else if (tempTouch.direction === NavigDirection.Left && objectPosX < -itemRef.current.width * 2 / 3) dispatch(navigateToRight());
 
     setCssAnimationDefault(itemRef);
   }
 
   const onTouchMoveHandler = (t: TouchEvent) => {
-    // get touch position
-    objectPosX = getObjectPosX(itemRef);
+    //  indicate move direction, previous and current touch values changings
+    if (tempTouch && (tempTouch.posX > t.changedTouches[0].clientX))
+      setTempTouch({ posX: t.changedTouches[0].clientX, direction: NavigDirection.Left })
 
-    // get touch move value
-    movementX = t.touches[0].clientX - state.touchValues.touchDownPosX;
+    else if (tempTouch && (tempTouch.posX < t.changedTouches[0].clientX))
+      setTempTouch({ posX: t.changedTouches[0].clientX, direction: NavigDirection.Right })
+
+    // set first touch to local touch state(tempTouch)
+    if (!tempTouch.posX) setTempTouch({ posX: t.changedTouches[0].clientX });
+
+    // set every current touch to store to make it behaves carousel item as untouched when stop moving our finger while we still touching
+    dispatch(setTouchChanges({ touchDown: true, touchDownPosX: t.changedTouches[0].clientX }));
+
+    // calculate the difference between the current position and the last stopped position as we set above
+    if (state.touchValues && state.touchValues.touchDownPosX)
+      // movementX -> equivalent of PointerEvent's movementX
+      movementX = Math.round(t.changedTouches[0].clientX - state.touchValues.touchDownPosX);
+
+    // get item position
+    objectPosX = getObjectPosX(itemRef);
 
     // set new values to css object-position
     if (state.touchValues && state.touchValues.touchDown)
-      itemRef.current.style.objectPosition = `${objectPosX + movementX / 35}px`;
+      itemRef.current.style.objectPosition = `${objectPosX + movementX}px`;
   }
 
   if (children) return (

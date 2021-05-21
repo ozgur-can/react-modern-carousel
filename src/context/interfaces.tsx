@@ -38,3 +38,7 @@ export interface IInterval {
     isExist: boolean;
     delay: number | string;
 }
+export interface ITempTouch {
+    posX?: number;
+    direction?: NavigDirection;
+}
