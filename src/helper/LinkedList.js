@@ -12,7 +12,7 @@ class LinkedList {
         nodeContent: nodeContent,
         prev: null,
         next: null,
-        length: this.length,
+        index: this.length,
       };
     } else {
       this.length++;
@@ -21,7 +21,7 @@ class LinkedList {
         nodeContent: nodeContent,
         prev: null,
         next: null,
-        length: this.length,
+        index: this.length,
       };
 
       while (now.next != null) now = now.next;

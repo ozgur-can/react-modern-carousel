@@ -5,10 +5,10 @@ export const reducer = (state: IState, action: IActionType): IState => {
 
   switch (action.type) {
     case "LEFT":
-      return { ...state, itemToShow: state.itemToShow.prev, itemIndex: state.itemToShow.prev.length };
+      return { ...state, itemToShow: state.itemToShow.prev, itemIndex: state.itemToShow.prev.index };
 
     case "RIGHT":
-      return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.length };
+      return { ...state, itemToShow: state.itemToShow.next, itemIndex: state.itemToShow.next.index };
 
     case "SET_ITEMS": {
       const linkedList = new LinkedList(action.infinite);
@@ -18,7 +18,7 @@ export const reducer = (state: IState, action: IActionType): IState => {
         linkedList: linkedList,
         itemToShow: linkedList.head,
         items: action.items,
-        itemIndex: linkedList.head.length
+        itemIndex: linkedList.head.index
       };
     }
 
