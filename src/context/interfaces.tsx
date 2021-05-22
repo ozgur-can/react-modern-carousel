@@ -4,7 +4,6 @@ export interface IState {
     linkedList?: LinkedList;
     itemToShow?: any;
     items?: (React.ReactChild | React.ReactFragment | React.ReactPortal)[];
-    itemDirection?: string;
     pointerValues?: IPointerValues;
     touchValues?: ITouchValues;
     itemIndex?: number;

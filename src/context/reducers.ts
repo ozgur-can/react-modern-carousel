@@ -30,29 +30,23 @@ export const reducer = (state: IState, action: IActionType): IState => {
       };
 
     case "SET_POINTER_CHANGES": {
-      if (action.pointerValues.pointerDownPosX)
-        return { ...state, pointerValues: action.pointerValues };
-      if (!action.pointerValues.pointerDownPosX)
-        return {
-          ...state,
-          pointerValues: {
-            ...state.pointerValues,
-            pointerDown: action.pointerValues.pointerDown,
-          },
-        };
+      return {
+        ...state,
+        pointerValues: {
+          pointerDown: action.pointerValues.pointerDown,
+          pointerDownPosX: action.pointerValues.pointerDownPosX,
+        },
+      };
     }
 
     case "SET_TOUCH_CHANGES": {
-      if (action.touchValues.touchDownPosX)
-        return { ...state, touchValues: action.touchValues };
-      if (!action.touchValues.touchDownPosX)
-        return {
-          ...state,
-          touchValues: {
-            ...state.touchValues,
-            touchDown: action.touchValues.touchDown,
-          },
-        };
+      return {
+        ...state,
+        touchValues: {
+          touchDown: action.touchValues.touchDown,
+          touchDownPosX: action.touchValues.touchDownPosX
+        },
+      };
     }
 
     default:
