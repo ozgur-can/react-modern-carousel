@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { setCssAnimationEnd, setCssAnimationOnload } from "../helper";
+import { carouselCSS, setCssAnimationEnd, setCssAnimationOnload } from "../helper";
 
 const AnimatedItemChild = React.forwardRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, any>((props, ref) => {
     const childRef = React.useRef<HTMLImageElement | HTMLCanvasElement | HTMLVideoElement>(null);
@@ -41,8 +41,9 @@ const AnimatedItemChild = React.forwardRef<HTMLImageElement | HTMLCanvasElement 
                 onLoadStart: () => setCssAnimationOnload(childRef),
                 onAnimationEnd: () => setCssAnimationEnd(childRef),
                 ref: (node: HTMLVideoElement) => useChildRef(node),
-                style: { ...props.style, objectFit: "contain" },
                 src: props.children.props.src,
+                style: { ...props.style, objectFit: "contain" },
+                width: carouselCSS.width,
                 controls: true,
             });
         }

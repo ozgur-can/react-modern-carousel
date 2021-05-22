@@ -43,8 +43,8 @@ export type CanvasProps = React.DetailedHTMLProps<
 
 // set carousel css settings (width & height ...)
 export const carouselCSS: React.CSSProperties = {
-  width: isMobile ? "95%" : 400,
-  height: isMobile ? window.innerHeight / 2 : 400,
+  width: isMobile ? (window.innerWidth * 0.9) : 400,
+  height: isMobile ? (window.innerHeight * 0.5) : 400,
   margin: "auto",
   display: "flex",
   justifyContent: "center",

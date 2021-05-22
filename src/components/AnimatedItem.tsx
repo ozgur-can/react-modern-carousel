@@ -134,9 +134,9 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
     objectPosX = getObjectPosX(itemRef);
 
     // success - next - mouse up
-    if (tempTouch.direction === NavigDirection.Right && objectPosX > itemRef.current.width * 2 / 3) dispatch(navigateToLeft());
+    if (tempTouch.direction === NavigDirection.Right && objectPosX > itemRef.current.width) dispatch(navigateToLeft());
     // success - prev - mouse up
-    else if (tempTouch.direction === NavigDirection.Left && objectPosX < -itemRef.current.width * 2 / 3) dispatch(navigateToRight());
+    else if (tempTouch.direction === NavigDirection.Left && objectPosX < -itemRef.current.width) dispatch(navigateToRight());
 
     setCssAnimationDefault(itemRef);
   }
@@ -165,7 +165,7 @@ export const AnimatedItem: React.FC<{ interval: IInterval }> = ({ children, inte
 
     // set new values to css object-position
     if (state.touchValues && state.touchValues.touchDown)
-      itemRef.current.style.objectPosition = `${objectPosX + movementX}px`;
+      itemRef.current.style.objectPosition = `${objectPosX + 1.5 * movementX}px`;
   }
 
   if (children) return (
